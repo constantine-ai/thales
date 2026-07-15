@@ -46,6 +46,8 @@ resourceBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     if (btn.dataset.resource === 'quadratic-graph') {
       showAppScreen();
+    } else if (btn.dataset.resource === 'space-rockets') {
+      window.location.href = 'cohetes-espaciales.html';
     }
   });
 });

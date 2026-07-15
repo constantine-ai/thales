@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cohetes al Sistema Solar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a2847 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f8fafc;
+            overflow-x: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 15px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #334155;
+            border-color: #64748b;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 45px rgba(2, 6, 23, 0.35);
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            min-height: 600px;
+        }
+
+        .planet-label {
+            font-size: 12px;
+            fill: #cbd5e1;
+            text-anchor: middle;
+        }
+
+        .time-label {
+            font-size: 11px;
+            fill: #38bdf8;
+            font-weight: bold;
+            text-anchor: middle;
+        }
+
+        .earth-label {
+            font-size: 13px;
+            fill: #38bdf8;
+            text-anchor: middle;
+            font-weight: bold;
+        }
+
+        @keyframes rocketsMove {
+            0% {
+                offset-distance: 0%;
+            }
+            100% {
+                offset-distance: 100%;
+            }
+        }
+
+        .rocket-text {
+            font-size: 24px;
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8));
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚀 Viaje a los Planetas del Sistema Solar</h1>
+        <button class="back-btn" onclick="goBack()">← Atrás</button>
+    </header>
+
+    <div class="container">
+        <svg id="space-svg" viewBox="0 0 1400 700">
+            <!-- Estrellas de fondo -->
+            <defs>
+                <style>
+                    @keyframes twinkle {
+                        0%, 100% { opacity: 0.3; }
+                        50% { opacity: 1; }
+                    }
+                    .star {
+                        animation: twinkle 3s infinite;
+                    }
+                </style>
+            </defs>
+
+            <!-- Estrellas -->
+            <circle class="star" cx="150" cy="80" r="1.5" fill="#fff"/>
+            <circle class="star" cx="250" cy="120" r="1" fill="#fff"/>
+            <circle class="star" cx="350" cy="60" r="1.5" fill="#fff"/>
+            <circle class="star" cx="450" cy="100" r="1" fill="#fff"/>
+            <circle class="star" cx="550" cy="50" r="1.5" fill="#fff"/>
+            <circle class="star" cx="650" cy="90" r="1" fill="#fff"/>
+            <circle class="star" cx="750" cy="70" r="1.5" fill="#fff"/>
+            <circle class="star" cx="850" cy="110" r="1" fill="#fff"/>
+            <circle class="star" cx="950" cy="80" r="1.5" fill="#fff"/>
+            <circle class="star" cx="1050" cy="100" r="1" fill="#fff"/>
+            <circle class="star" cx="1150" cy="60" r="1.5" fill="#fff"/>
+            <circle class="star" cx="1250" cy="120" r="1" fill="#fff"/>
+            <circle class="star" cx="1350" cy="50" r="1.5" fill="#fff"/>
+
+            <!-- Tierra a la izquierda -->
+            <g id="earth-group">
+                <circle cx="100" cy="400" r="30" fill="#38bdf8" stroke="#0369a1" stroke-width="2"/>
+                <circle cx="100" cy="400" r="30" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.5" r="40"/>
+                <text class="earth-label" x="100" y="450">🌍 Tierra</text>
+            </g>
+
+            <!-- Planetas alineados a la derecha -->
+            <g id="planets">
+                <!-- Mercurio -->
+                <line x1="180" y1="70" x2="1250" y2="70" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="70" r="12" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+                <text class="planet-label" x="1250" y="100">Mercurio</text>
+                <text class="time-label" x="1250" y="118">3-4 meses</text>
+
+                <!-- Venus -->
+                <line x1="180" y1="140" x2="1250" y2="140" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="140" r="16" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                <text class="planet-label" x="1250" y="170">Venus</text>
+                <text class="time-label" x="1250" y="188">2-3 meses</text>
+
+                <!-- Marte -->
+                <line x1="180" y1="220" x2="1250" y2="220" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="220" r="13" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+                <text class="planet-label" x="1250" y="250">Marte</text>
+                <text class="time-label" x="1250" y="268">6-9 meses</text>
+
+                <!-- Júpiter -->
+                <line x1="180" y1="320" x2="1250" y2="320" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="320" r="28" fill="#d97706" stroke="#a16207" stroke-width="1"/>
+                <ellipse cx="1250" cy="320" rx="28" ry="16" fill="none" stroke="#a16207" stroke-width="1" opacity="0.5"/>
+                <text class="planet-label" x="1250" y="365">Júpiter</text>
+                <text class="time-label" x="1250" y="383">1.5-2 años</text>
+
+                <!-- Saturno -->
+                <line x1="180" y1="450" x2="1250" y2="450" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="450" r="22" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+                <ellipse cx="1250" cy="450" rx="40" ry="6" fill="none" stroke="#d97706" stroke-width="2"/>
+                <text class="planet-label" x="1250" y="490">Saturno</text>
+                <text class="time-label" x="1250" y="508">2.5-3 años</text>
+
+                <!-- Urano -->
+                <line x1="180" y1="560" x2="1250" y2="560" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="560" r="18" fill="#06b6d4" stroke="#0891b2" stroke-width="1"/>
+                <text class="planet-label" x="1250" y="595">Urano</text>
+                <text class="time-label" x="1250" y="613">3-4 años</text>
+
+                <!-- Neptuno -->
+                <line x1="180" y1="630" x2="1250" y2="630" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="630" r="16" fill="#3b82f6" stroke="#1e40af" stroke-width="1"/>
+                <text class="planet-label" x="1250" y="665">Neptuno</text>
+                <text class="time-label" x="1250" y="683">4-5 años</text>
+            </g>
+
+            <!-- Cohetes animados -->
+            <g id="rockets"></g>
+        </svg>
+    </div>
+
+    <script>
+        const planets = [
+            { name: 'Mercurio', x: 1250, y: 70, duration: '3-4 meses', time: 8 },
+            { name: 'Venus', x: 1250, y: 140, duration: '2-3 meses', time: 6 },
+            { name: 'Marte', x: 1250, y: 220, duration: '6-9 meses', time: 10 },
+            { name: 'Júpiter', x: 1250, y: 320, duration: '1.5-2 años', time: 24 },
+            { name: 'Saturno', x: 1250, y: 450, duration: '2.5-3 años', time: 36 },
+            { name: 'Urano', x: 1250, y: 560, duration: '3-4 años', time: 44 },
+            { name: 'Neptuno', x: 1250, y: 630, duration: '4-5 años', time: 54 }
+        ];
+
+        const earthX = 100;
+        const earthY = 400;
+
+        function createRockets() {
+            const rocketsContainer = document.getElementById('rockets');
+            rocketsContainer.innerHTML = '';
+
+            planets.forEach((planet, index) => {
+                const duration = planet.time;
+
+                // Crear grupo del cohete
+                const rocketGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                rocketGroup.setAttribute('id', `rocket-${index}`);
+
+                // Crear path para la animación
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', `M ${earthX} ${earthY} L ${planet.x} ${planet.y}`);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', 'none');
+                path.setAttribute('id', `path-${index}`);
+
+                rocketsContainer.appendChild(path);
+
+                // Crear barra de progreso (fondo)
+                const progressBarBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                progressBarBg.setAttribute('x', '140');
+                progressBarBg.setAttribute('y', planet.y - 8);
+                progressBarBg.setAttribute('width', '1070');
+                progressBarBg.setAttribute('height', '8');
+                progressBarBg.setAttribute('fill', '#334155');
+                progressBarBg.setAttribute('opacity', '0.5');
+                progressBarBg.setAttribute('rx', '4');
+                rocketsContainer.appendChild(progressBarBg);
+
+                // Crear barra de progreso (fill)
+                const progressBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                progressBar.setAttribute('x', '140');
+                progressBar.setAttribute('y', planet.y - 8);
+                progressBar.setAttribute('width', '0');
+                progressBar.setAttribute('height', '8');
+                progressBar.setAttribute('fill', '#38bdf8');
+                progressBar.setAttribute('rx', '4');
+
+                // Animar la barra de progreso
+                const progressAnim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                progressAnim.setAttribute('attributeName', 'width');
+                progressAnim.setAttribute('from', '0');
+                progressAnim.setAttribute('to', '1070');
+                progressAnim.setAttribute('dur', `${duration}s`);
+                progressAnim.setAttribute('repeatCount', 'indefinite');
+                progressBar.appendChild(progressAnim);
+                rocketsContainer.appendChild(progressBar);
+
+                // Crear texto del cohete
+                const rocketText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                rocketText.setAttribute('class', 'rocket-text');
+                rocketText.setAttribute('text-anchor', 'middle');
+                rocketText.textContent = '🚀';
+
+                // Crear animación de movimiento
+                const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+                animateMotion.setAttribute('dur', `${duration}s`);
+                animateMotion.setAttribute('repeatCount', 'indefinite');
+                animateMotion.setAttribute('keyPoints', '0;1');
+                animateMotion.setAttribute('keyTimes', '0;1');
+                animateMotion.setAttribute('calcMode', 'linear');
+
+                // Crear elemento mpath
+                const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
+                mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#path-${index}`);
+
+                animateMotion.appendChild(mpath);
+                rocketText.appendChild(animateMotion);
+                rocketGroup.appendChild(rocketText);
+
+                // Crear contador de tiempo
+                const timeText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                timeText.setAttribute('x', '1100');
+                timeText.setAttribute('y', planet.y + 12);
+                timeText.setAttribute('font-size', '10');
+                timeText.setAttribute('fill', '#7dd3fc');
+                timeText.textContent = '0.0s';
+
+                rocketGroup.appendChild(timeText);
+                rocketsContainer.appendChild(rocketGroup);
+
+                // Actualizar contador cada 100ms
+                let currentTime = 0;
+                setInterval(() => {
+                    if (currentTime >= duration) {
+                        currentTime = 0;
+                    }
+                    timeText.textContent = currentTime.toFixed(1) + 's';
+                    currentTime += 0.1;
+                }, 100);
+            });
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Crear cohetes al cargar
+        window.addEventListener('load', createRockets);
+    </script>
+</body>
+</html>

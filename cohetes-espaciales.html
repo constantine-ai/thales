@@ -113,12 +113,19 @@
 </head>
 <body>
     <header>
-        <h1>🚀 Viaje a los Planetas del Sistema Solar</h1>
-        <button class="back-btn" onclick="goBack()">← Atrás</button>
+        <h1>🚀 Viaje a Planetas y Estrellas Cercanas</h1>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="speed-slider" style="color: #cbd5e1; font-weight: 600;">Velocidad:</label>
+                <input type="range" id="speed-slider" min="0.5" max="2" step="0.1" value="1" style="width: 150px;">
+                <span id="speed-value" style="color: #38bdf8; font-weight: bold; min-width: 50px;">1.0x</span>
+            </div>
+            <button class="back-btn" onclick="goBack()">← Atrás</button>
+        </div>
     </header>
 
     <div class="container">
-        <svg id="space-svg" viewBox="0 0 1400 700">
+        <svg id="space-svg" viewBox="0 0 1400 800">
             <!-- Estrellas de fondo -->
             <defs>
                 <style>
@@ -199,6 +206,19 @@
                 <circle cx="1250" cy="630" r="16" fill="#3b82f6" stroke="#1e40af" stroke-width="1"/>
                 <text class="planet-label" x="1250" y="665">Neptuno</text>
                 <text class="time-label" x="1250" y="683">4-5 años</text>
+
+                <!-- ESTRELLAS CERCANAS -->
+                <!-- Proxima Centauri -->
+                <line x1="180" y1="30" x2="1250" y2="30" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="30" r="10" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5"/>
+                <text class="planet-label" x="1250" y="55" style="fill: #fbbf24; font-weight: bold;">Proxima Centauri ⭐</text>
+                <text class="time-label" x="1250" y="73">4.24 años-luz</text>
+
+                <!-- Alfa Centauri -->
+                <line x1="180" y1="720" x2="1250" y2="720" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5,5"/>
+                <circle cx="1250" cy="720" r="11" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5"/>
+                <text class="planet-label" x="1250" y="750" style="fill: #fbbf24; font-weight: bold;">Alfa Centauri A ⭐</text>
+                <text class="time-label" x="1250" y="768">4.37 años-luz</text>
             </g>
 
             <!-- Cohetes animados -->
@@ -214,7 +234,9 @@
             { name: 'Júpiter', x: 1250, y: 320, duration: '1.5-2 años', time: 24 },
             { name: 'Saturno', x: 1250, y: 450, duration: '2.5-3 años', time: 36 },
             { name: 'Urano', x: 1250, y: 560, duration: '3-4 años', time: 44 },
-            { name: 'Neptuno', x: 1250, y: 630, duration: '4-5 años', time: 54 }
+            { name: 'Neptuno', x: 1250, y: 630, duration: '4-5 años', time: 54 },
+            { name: 'Proxima Centauri', x: 1250, y: 30, duration: '4.24 años-luz', time: 120, isEstar: true },
+            { name: 'Alfa Centauri A', x: 1250, y: 720, duration: '4.37 años-luz', time: 124, isEstar: true }
         ];
 
         const earthX = 100;
@@ -225,7 +247,7 @@
             rocketsContainer.innerHTML = '';
 
             planets.forEach((planet, index) => {
-                const duration = planet.time;
+                const duration = planet.time / (typeof speedMultiplier !== 'undefined' ? speedMultiplier : 1);
 
                 // Crear grupo del cohete
                 const rocketGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -257,7 +279,7 @@
                 progressBar.setAttribute('y', planet.y - 8);
                 progressBar.setAttribute('width', '0');
                 progressBar.setAttribute('height', '8');
-                progressBar.setAttribute('fill', '#38bdf8');
+                progressBar.setAttribute('fill', planet.isEstar ? '#fbbf24' : '#38bdf8');
                 progressBar.setAttribute('rx', '4');
 
                 // Animar la barra de progreso
@@ -274,7 +296,7 @@
                 const rocketText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 rocketText.setAttribute('class', 'rocket-text');
                 rocketText.setAttribute('text-anchor', 'middle');
-                rocketText.textContent = '🚀';
+                rocketText.textContent = planet.isEstar ? '⭐' : '🚀';
 
                 // Crear animación de movimiento
                 const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
@@ -297,7 +319,7 @@
                 timeText.setAttribute('x', '1100');
                 timeText.setAttribute('y', planet.y + 12);
                 timeText.setAttribute('font-size', '10');
-                timeText.setAttribute('fill', '#7dd3fc');
+                timeText.setAttribute('fill', planet.isEstar ? '#fbbf24' : '#7dd3fc');
                 timeText.textContent = '0.0s';
 
                 rocketGroup.appendChild(timeText);
@@ -317,6 +339,20 @@
 
         function goBack() {
             window.location.href = 'index.html';
+        }
+
+        let speedMultiplier = 1;
+
+        // Slider de velocidad
+        const speedSlider = document.getElementById('speed-slider');
+        const speedValue = document.getElementById('speed-value');
+
+        if (speedSlider) {
+            speedSlider.addEventListener('input', (e) => {
+                speedMultiplier = parseFloat(e.target.value);
+                speedValue.textContent = speedMultiplier.toFixed(1) + 'x';
+                createRockets();
+            });
         }
 
         // Crear cohetes al cargar

@@ -1,0 +1,352 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #07111f;
+  color: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #07111f, #14233d);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+/* PORTADA */
+.cover-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #07111f 0%, #1e3a5f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.cover-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cover-content {
+  text-align: center;
+  animation: fadeInUp 0.8s ease;
+}
+
+.cover-title {
+  font-size: 3.5rem;
+  margin: 0 0 12px 0;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-subtitle {
+  font-size: 1.25rem;
+  color: #cbd5e1;
+  margin: 0 0 32px 0;
+  opacity: 0.8;
+}
+
+.enter-button {
+  font-size: 1.1rem;
+  padding: 14px 40px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  border: 0;
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 10px 30px rgba(56, 189, 248, 0.3);
+}
+
+.enter-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(56, 189, 248, 0.5);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PANTALLA DE RECURSOS */
+.resources-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #07111f, #14233d);
+  display: none;
+  flex-direction: column;
+  z-index: 999;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.resources-screen.active {
+  display: flex;
+}
+
+.resources-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(148, 163, 184, 0.2);
+}
+
+.resources-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background: #334155;
+  border-color: #64748b;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.level-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 2px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.35);
+  transition: all 0.3s ease;
+}
+
+.level-card:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 20px 45px rgba(56, 189, 248, 0.15);
+  transform: translateY(-4px);
+}
+
+.level-card h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #38bdf8;
+  margin-bottom: 16px;
+}
+
+.resources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.resource-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.resource-btn:hover:not(:disabled) {
+  background: #334155;
+  border-color: #64748b;
+  color: #f8fafc;
+}
+
+.resource-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.app {
+  display: none;
+}
+
+.app.active {
+  display: grid;
+}
+
+.app.active {
+  width: min(1100px, 100%);
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.panel,
+.graph-card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.35);
+}
+
+.close-app-btn {
+  display: block;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.close-app-btn:hover {
+  background: #334155;
+  border-color: #64748b;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+form {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.coef-control {
+  margin-bottom: 2px;
+}
+
+input {
+  width: 100px;
+  padding: 8px 10px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 8px;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  width: auto;
+  padding: 0;
+  accent-color: #38bdf8;
+}
+
+.slider-row span {
+  min-width: 42px;
+  text-align: right;
+  font-weight: 700;
+  color: #7dd3fc;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.samples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.sample-btn {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+.info-card {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.12);
+  line-height: 1.5;
+}
+
+.graph-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 640px;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+}
+
+@media (max-width: 860px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .graph-card {
+    min-height: 480px;
+  }
+}

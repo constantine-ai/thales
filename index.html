@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursos Matemáticos</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- PORTADA INICIAL -->
+    <div id="cover-screen" class="cover-screen active">
+      <div class="cover-content">
+        <h1 class="cover-title">Recursos Matemáticos</h1>
+        <p class="cover-subtitle">Exploración interactiva de conceptos matemáticos</p>
+        <button id="enter-btn" class="enter-button">Explorar Recursos</button>
+      </div>
+    </div>
+
+    <!-- GALERÍA DE RECURSOS -->
+    <div id="resources-screen" class="resources-screen">
+      <header class="resources-header">
+        <h1>Recursos por Nivel</h1>
+        <button id="back-btn" class="back-button">← Volver</button>
+      </header>
+
+      <div class="resources-grid">
+        <!-- Primero Medio -->
+        <div class="level-card" data-level="1">
+          <h2>Primero Medio</h2>
+          <div class="resources-list">
+            <button class="resource-btn" data-resource="quadratic-graph">
+              📈 Plano Cartesiano y Ecuaciones Cuadráticas
+            </button>
+          </div>
+        </div>
+
+        <!-- Segundo Medio -->
+        <div class="level-card" data-level="2">
+          <h2>Segundo Medio</h2>
+          <div class="resources-list">
+            <button class="resource-btn" disabled>
+              🔒 Próximos recursos
+            </button>
+          </div>
+        </div>
+
+        <!-- Tercero Medio -->
+        <div class="level-card" data-level="3">
+          <h2>Tercero Medio</h2>
+          <div class="resources-list">
+            <button class="resource-btn" disabled>
+              🔒 Próximos recursos
+            </button>
+          </div>
+        </div>
+
+        <!-- Cuarto Medio -->
+        <div class="level-card" data-level="4">
+          <h2>Cuarto Medio</h2>
+          <div class="resources-list">
+            <button class="resource-btn" disabled>
+              🔒 Próximos recursos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENIDO DE LA APLICACIÓN -->
+    <main id="app-screen" class="app">
+      <section class="panel">
+        <button id="close-app-btn" class="close-app-btn">← Recursos</button>
+        <h1>Plano cartesiano para ecuaciones de segundo grado</h1>
+        <p>Introduce los coeficientes de una función cuadrática y observa su gráfica.</p>
+
+        <form id="equation-form">
+          <label class="coef-control">
+            <span>a</span>
+            <input id="coef-a" type="number" step="0.1" value="1" />
+          </label>
+          <div class="slider-row">
+            <input id="slider-a" type="range" min="-5" max="5" step="0.1" value="1" />
+            <span id="slider-a-value">1.0</span>
+          </div>
+          <label>
+            b
+            <input id="coef-b" type="number" step="0.1" value="-2" />
+          </label>
+          <label>
+            c
+            <input id="coef-c" type="number" step="0.1" value="-3" />
+          </label>
+          <button type="submit">Graficar</button>
+        </form>
+
+        <div class="samples">
+          <button class="sample-btn" data-a="1" data-b="0" data-c="0">y = x²</button>
+          <button class="sample-btn" data-a="-1" data-b="0" data-c="4">y = -x² + 4</button>
+          <button class="sample-btn" data-a="1" data-b="-4" data-c="0">y = x² - 4x</button>
+        </div>
+
+        <div class="info-card">
+          <p id="equation-text">y = x² - 2x - 3</p>
+          <p id="vertex-text">Vértice: (1, -4)</p>
+          <p id="roots-text">Raíces: x = -1 y x = 3</p>
+        </div>
+      </section>
+
+      <section class="graph-card">
+        <svg id="graph" viewBox="0 0 600 600" aria-label="Gráfica de la ecuación"></svg>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

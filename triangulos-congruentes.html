@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triángulos Congruentes - Verificador Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #07111f 0%, #1a2a4a 100%);
+            color: #f8fafc;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 1.1em;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .triangle-section {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid #38bdf8;
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .triangle-section h2 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        svg {
+            width: 100%;
+            height: 400px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 15px;
+            cursor: crosshair;
+        }
+
+        .vertex {
+            cursor: grab;
+            transition: r 0.2s;
+        }
+
+        .vertex:hover {
+            r: 8;
+        }
+
+        .vertex.dragging {
+            cursor: grabbing;
+        }
+
+        .side-label {
+            font-size: 12px;
+            fill: #cbd5e1;
+            font-weight: bold;
+        }
+
+        .angle-label {
+            font-size: 11px;
+            fill: #fbbf24;
+            font-weight: bold;
+        }
+
+        .info-panel {
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid #38bdf8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .info-label {
+            color: #fbbf24;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .measurement {
+            color: #38bdf8;
+            font-family: monospace;
+        }
+
+        .comparison-section {
+            grid-column: 1 / -1;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .comparison-section h2 {
+            color: #10b981;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-item {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .comparison-item h3 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .comparison-result {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .congruent {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            color: #10b981;
+        }
+
+        .not-congruent {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .tolerance-info {
+            color: #cbd5e1;
+            font-size: 0.85em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #38bdf8;
+            color: #07111f;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #0ea5e9;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="window.history.back()">← Atrás</button>
+
+        <header>
+            <h1>🔺 Triángulos Congruentes</h1>
+            <p class="subtitle">Mueve los vértices para explorar congruencias y ángulos</p>
+        </header>
+
+        <div class="content">
+            <!-- Triángulo 1 -->
+            <div class="triangle-section">
+                <h2>Triángulo 1</h2>
+                <svg id="canvas1">
+                    <!-- Se genera dinámicamente con JavaScript -->
+                </svg>
+                <div class="info-panel">
+                    <div class="info-label">Lados:</div>
+                    <div class="info-row">
+                        <span>Lado a (BC):</span>
+                        <span class="measurement" id="side-a1">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Lado b (AC):</span>
+                        <span class="measurement" id="side-b1">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Lado c (AB):</span>
+                        <span class="measurement" id="side-c1">-</span>
+                    </div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-label">Ángulos:</div>
+                    <div class="info-row">
+                        <span>∠A:</span>
+                        <span class="measurement" id="angle-a1">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>∠B:</span>
+                        <span class="measurement" id="angle-b1">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>∠C:</span>
+                        <span class="measurement" id="angle-c1">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Triángulo 2 -->
+            <div class="triangle-section">
+                <h2>Triángulo 2</h2>
+                <svg id="canvas2">
+                    <!-- Se genera dinámicamente con JavaScript -->
+                </svg>
+                <div class="info-panel">
+                    <div class="info-label">Lados:</div>
+                    <div class="info-row">
+                        <span>Lado a (BC):</span>
+                        <span class="measurement" id="side-a2">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Lado b (AC):</span>
+                        <span class="measurement" id="side-b2">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Lado c (AB):</span>
+                        <span class="measurement" id="side-c2">-</span>
+                    </div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-label">Ángulos:</div>
+                    <div class="info-row">
+                        <span>∠A:</span>
+                        <span class="measurement" id="angle-a2">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>∠B:</span>
+                        <span class="measurement" id="angle-b2">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span>∠C:</span>
+                        <span class="measurement" id="angle-c2">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparación -->
+        <div class="comparison-section">
+            <h2>📊 Verificación de Congruencia</h2>
+            <div class="comparison-grid">
+                <div class="comparison-item">
+                    <h3>Congruencia SSS (Lado-Lado-Lado)</h3>
+                    <div id="sss-result"></div>
+                </div>
+                <div class="comparison-item">
+                    <h3>Congruencia SAS (Lado-Ángulo-Lado)</h3>
+                    <div id="sas-result"></div>
+                </div>
+                <div class="comparison-item">
+                    <h3>Congruencia ASA (Ángulo-Lado-Ángulo)</h3>
+                    <div id="asa-result"></div>
+                </div>
+                <div class="comparison-item">
+                    <h3>Congruencia AAS (Ángulo-Ángulo-Lado)</h3>
+                    <div id="aas-result"></div>
+                </div>
+            </div>
+            <div id="overall-result" style="text-align: center; margin-top: 20px;"></div>
+            <p class="tolerance-info">💡 Tolerancia de comparación: ±0.5 unidades (lados) y ±1° (ángulos)</p>
+        </div>
+    </div>
+
+    <script>
+        class Triangle {
+            constructor(canvasId, sideIds, angleIds) {
+                this.canvas = document.getElementById(canvasId);
+                this.sideIds = sideIds;
+                this.angleIds = angleIds;
+                
+                // Posiciones iniciales de vértices
+                this.vertices = [
+                    { x: 150, y: 100 },   // A
+                    { x: 400, y: 300 },   // B
+                    { x: 100, y: 280 }    // C
+                ];
+
+                this.draggingVertex = null;
+                this.svg = null;
+
+                this.init();
+            }
+
+            init() {
+                this.canvas.setAttribute('viewBox', '0 0 500 400');
+                this.canvas.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+                
+                // Dibujar triángulo
+                this.draw();
+
+                // Event listeners para arrastre
+                this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+                this.canvas.addEventListener('mousemove', (e) => this.onMouseMove(e));
+                this.canvas.addEventListener('mouseup', () => this.onMouseUp());
+                this.canvas.addEventListener('mouseleave', () => this.onMouseUp());
+
+                // Actualizar medidas
+                this.updateMeasurements();
+            }
+
+            draw() {
+                // Limpiar canvas
+                this.canvas.innerHTML = '';
+
+                const [A, B, C] = this.vertices;
+
+                // Dibujar lados
+                const sides = [
+                    { x1: B.x, y1: B.y, x2: C.x, y2: C.y, label: 'a' },
+                    { x1: A.x, y1: A.y, x2: C.x, y2: C.y, label: 'b' },
+                    { x1: A.x, y1: A.y, x2: B.x, y2: B.y, label: 'c' }
+                ];
+
+                sides.forEach(side => {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', side.x1);
+                    line.setAttribute('y1', side.y1);
+                    line.setAttribute('x2', side.x2);
+                    line.setAttribute('y2', side.y2);
+                    line.setAttribute('stroke', '#38bdf8');
+                    line.setAttribute('stroke-width', '2');
+                    this.canvas.appendChild(line);
+
+                    // Etiqueta del lado
+                    const midX = (side.x1 + side.x2) / 2;
+                    const midY = (side.y1 + side.y2) / 2;
+                    const offsetX = (side.y2 - side.y1) / 10;
+                    const offsetY = (side.x1 - side.x2) / 10;
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', midX + offsetX);
+                    text.setAttribute('y', midY + offsetY);
+                    text.setAttribute('class', 'side-label');
+                    text.setAttribute('text-anchor', 'middle');
+                    text.textContent = side.label;
+                    this.canvas.appendChild(text);
+                });
+
+                // Dibujar vértices
+                this.vertices.forEach((vertex, idx) => {
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', vertex.x);
+                    circle.setAttribute('cy', vertex.y);
+                    circle.setAttribute('r', '6');
+                    circle.setAttribute('fill', '#fbbf24');
+                    circle.setAttribute('class', 'vertex');
+                    circle.setAttribute('data-index', idx);
+                    this.canvas.appendChild(circle);
+                });
+
+                // Dibujar ángulos
+                this.drawAngles();
+            }
+
+            drawAngles() {
+                const [A, B, C] = this.vertices;
+                const angleSize = 30;
+
+                const angles = [
+                    { vertex: A, p1: B, p2: C, label: 'A' },
+                    { vertex: B, p1: A, p2: C, label: 'B' },
+                    { vertex: C, p1: A, p2: B, label: 'C' }
+                ];
+
+                angles.forEach(angle => {
+                    const v1 = { x: angle.p1.x - angle.vertex.x, y: angle.p1.y - angle.vertex.y };
+                    const v2 = { x: angle.p2.x - angle.vertex.x, y: angle.p2.y - angle.vertex.y };
+
+                    const len1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+                    const len2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+
+                    const u1 = { x: v1.x / len1, y: v1.y / len1 };
+                    const u2 = { x: v2.x / len2, y: v2.y / len2 };
+
+                    // Dibujar arco
+                    const p1 = { x: angle.vertex.x + u1.x * angleSize, y: angle.vertex.y + u1.y * angleSize };
+                    const p2 = { x: angle.vertex.x + u2.x * angleSize, y: angle.vertex.y + u2.y * angleSize };
+
+                    const arc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const d = `M ${p1.x} ${p1.y} A ${angleSize} ${angleSize} 0 0 1 ${p2.x} ${p2.y}`;
+                    arc.setAttribute('d', d);
+                    arc.setAttribute('stroke', '#fbbf24');
+                    arc.setAttribute('stroke-width', '1.5');
+                    arc.setAttribute('fill', 'none');
+                    this.canvas.appendChild(arc);
+
+                    // Etiqueta del ángulo
+                    const midAngle = Math.atan2(u1.y + u2.y, u1.x + u2.x);
+                    const labelX = angle.vertex.x + Math.cos(midAngle) * (angleSize + 15);
+                    const labelY = angle.vertex.y + Math.sin(midAngle) * (angleSize + 15);
+
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', labelX);
+                    text.setAttribute('y', labelY);
+                    text.setAttribute('class', 'angle-label');
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('dominant-baseline', 'middle');
+                    text.textContent = angle.label;
+                    this.canvas.appendChild(text);
+                });
+            }
+
+            onMouseDown(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const svgX = (e.clientX - rect.left) * (500 / rect.width);
+                const svgY = (e.clientY - rect.top) * (400 / rect.height);
+
+                for (let i = 0; i < this.vertices.length; i++) {
+                    const v = this.vertices[i];
+                    const dist = Math.sqrt((v.x - svgX) ** 2 + (v.y - svgY) ** 2);
+                    if (dist < 15) {
+                        this.draggingVertex = i;
+                        e.target.classList.add('dragging');
+                        break;
+                    }
+                }
+            }
+
+            onMouseMove(e) {
+                if (this.draggingVertex === null) return;
+
+                const rect = this.canvas.getBoundingClientRect();
+                const svgX = (e.clientX - rect.left) * (500 / rect.width);
+                const svgY = (e.clientY - rect.top) * (400 / rect.height);
+
+                // Limitar al área del canvas
+                this.vertices[this.draggingVertex].x = Math.max(20, Math.min(480, svgX));
+                this.vertices[this.draggingVertex].y = Math.max(20, Math.min(380, svgY));
+
+                this.draw();
+                this.updateMeasurements();
+                updateComparison();
+            }
+
+            onMouseUp() {
+                this.draggingVertex = null;
+                this.canvas.querySelectorAll('.vertex').forEach(v => v.classList.remove('dragging'));
+            }
+
+            updateMeasurements() {
+                const [A, B, C] = this.vertices;
+
+                // Calcular lados
+                const a = this.distance(B, C); // BC
+                const b = this.distance(A, C); // AC
+                const c = this.distance(A, B); // AB
+
+                // Calcular ángulos (en grados)
+                const angleA = this.calculateAngle(C, A, B);
+                const angleB = this.calculateAngle(A, B, C);
+                const angleC = this.calculateAngle(A, C, B);
+
+                // Actualizar UI
+                document.getElementById(this.sideIds.a).textContent = a.toFixed(1);
+                document.getElementById(this.sideIds.b).textContent = b.toFixed(1);
+                document.getElementById(this.sideIds.c).textContent = c.toFixed(1);
+
+                document.getElementById(this.angleIds.a).textContent = angleA.toFixed(1) + '°';
+                document.getElementById(this.angleIds.b).textContent = angleB.toFixed(1) + '°';
+                document.getElementById(this.angleIds.c).textContent = angleC.toFixed(1) + '°';
+
+                // Guardar en objeto para comparación
+                this.measurements = {
+                    sides: [a, b, c],
+                    angles: [angleA, angleB, angleC]
+                };
+            }
+
+            distance(p1, p2) {
+                return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+            }
+
+            calculateAngle(p1, vertex, p2) {
+                const v1 = { x: p1.x - vertex.x, y: p1.y - vertex.y };
+                const v2 = { x: p2.x - vertex.x, y: p2.y - vertex.y };
+
+                const dot = v1.x * v2.x + v1.y * v2.y;
+                const len1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+                const len2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+
+                const cosAngle = dot / (len1 * len2);
+                const angle = Math.acos(Math.max(-1, Math.min(1, cosAngle)));
+
+                return (angle * 180) / Math.PI;
+            }
+        }
+
+        // Crear dos triángulos
+        const triangle1 = new Triangle('canvas1', 
+            { a: 'side-a1', b: 'side-b1', c: 'side-c1' },
+            { a: 'angle-a1', b: 'angle-b1', c: 'angle-c1' }
+        );
+
+        const triangle2 = new Triangle('canvas2',
+            { a: 'side-a2', b: 'side-b2', c: 'side-c2' },
+            { a: 'angle-a2', b: 'angle-b2', c: 'angle-c2' }
+        );
+
+        function areSidesEqual(s1, s2, tolerance = 0.5) {
+            return Math.abs(s1 - s2) <= tolerance;
+        }
+
+        function areAnglesEqual(a1, a2, tolerance = 1) {
+            return Math.abs(a1 - a2) <= tolerance;
+        }
+
+        function updateComparison() {
+            if (!triangle1.measurements || !triangle2.measurements) return;
+
+            const s1 = triangle1.measurements.sides.sort((a, b) => a - b);
+            const s2 = triangle2.measurements.sides.sort((a, b) => a - b);
+            const a1 = triangle1.measurements.angles.sort((a, b) => a - b);
+            const a2 = triangle2.measurements.angles.sort((a, b) => a - b);
+
+            // SSS: Todos los lados iguales
+            const sss = s1.every((side, i) => areSidesEqual(side, s2[i]));
+            document.getElementById('sss-result').innerHTML = sss ? 
+                '<div class="comparison-result congruent">✓ CONGRUENTES</div>' :
+                '<div class="comparison-result not-congruent">✗ NO CONGRUENTES</div>';
+
+            // SAS: Dos lados y ángulo entre ellos
+            const sas = (areSidesEqual(triangle1.measurements.sides[0], triangle2.measurements.sides[0]) &&
+                        areSidesEqual(triangle1.measurements.sides[1], triangle2.measurements.sides[1]) &&
+                        areAnglesEqual(triangle1.measurements.angles[2], triangle2.measurements.angles[2])) ||
+                       (areSidesEqual(triangle1.measurements.sides[1], triangle2.measurements.sides[1]) &&
+                        areSidesEqual(triangle1.measurements.sides[2], triangle2.measurements.sides[2]) &&
+                        areAnglesEqual(triangle1.measurements.angles[0], triangle2.measurements.angles[0])) ||
+                       (areSidesEqual(triangle1.measurements.sides[0], triangle2.measurements.sides[0]) &&
+                        areSidesEqual(triangle1.measurements.sides[2], triangle2.measurements.sides[2]) &&
+                        areAnglesEqual(triangle1.measurements.angles[1], triangle2.measurements.angles[1]));
+            document.getElementById('sas-result').innerHTML = sas ? 
+                '<div class="comparison-result congruent">✓ CONGRUENTES</div>' :
+                '<div class="comparison-result not-congruent">✗ NO CONGRUENTES</div>';
+
+            // ASA: Dos ángulos y lado entre ellos
+            const asa = (areAnglesEqual(triangle1.measurements.angles[0], triangle2.measurements.angles[0]) &&
+                        areAnglesEqual(triangle1.measurements.angles[1], triangle2.measurements.angles[1]) &&
+                        areSidesEqual(triangle1.measurements.sides[2], triangle2.measurements.sides[2])) ||
+                       (areAnglesEqual(triangle1.measurements.angles[1], triangle2.measurements.angles[1]) &&
+                        areAnglesEqual(triangle1.measurements.angles[2], triangle2.measurements.angles[2]) &&
+                        areSidesEqual(triangle1.measurements.sides[0], triangle2.measurements.sides[0])) ||
+                       (areAnglesEqual(triangle1.measurements.angles[0], triangle2.measurements.angles[0]) &&
+                        areAnglesEqual(triangle1.measurements.angles[2], triangle2.measurements.angles[2]) &&
+                        areSidesEqual(triangle1.measurements.sides[1], triangle2.measurements.sides[1]));
+            document.getElementById('asa-result').innerHTML = asa ? 
+                '<div class="comparison-result congruent">✓ CONGRUENTES</div>' :
+                '<div class="comparison-result not-congruent">✗ NO CONGRUENTES</div>';
+
+            // AAS: Dos ángulos y un lado (no entre ellos)
+            const aas = (areAnglesEqual(triangle1.measurements.angles[0], triangle2.measurements.angles[0]) &&
+                        areAnglesEqual(triangle1.measurements.angles[1], triangle2.measurements.angles[1]) &&
+                        areSidesEqual(triangle1.measurements.sides[0], triangle2.measurements.sides[0])) ||
+                       (areAnglesEqual(triangle1.measurements.angles[1], triangle2.measurements.angles[1]) &&
+                        areAnglesEqual(triangle1.measurements.angles[2], triangle2.measurements.angles[2]) &&
+                        areSidesEqual(triangle1.measurements.sides[1], triangle2.measurements.sides[1])) ||
+                       (areAnglesEqual(triangle1.measurements.angles[0], triangle2.measurements.angles[0]) &&
+                        areAnglesEqual(triangle1.measurements.angles[2], triangle2.measurements.angles[2]) &&
+                        areSidesEqual(triangle1.measurements.sides[2], triangle2.measurements.sides[2]));
+            document.getElementById('aas-result').innerHTML = aas ? 
+                '<div class="comparison-result congruent">✓ CONGRUENTES</div>' :
+                '<div class="comparison-result not-congruent">✗ NO CONGRUENTES</div>';
+
+            // Resultado general
+            const isCongruent = sss || sas || asa || aas;
+            const overallResult = document.getElementById('overall-result');
+            if (isCongruent) {
+                overallResult.innerHTML = '<div class="comparison-result congruent" style="font-size: 1.3em;">✓ ¡Los triángulos son CONGRUENTES!</div>';
+            } else {
+                overallResult.innerHTML = '<div class="comparison-result not-congruent" style="font-size: 1.3em;">✗ Los triángulos NO son congruentes</div>';
+            }
+        }
+
+        // Actualizar comparación inicialmente y cuando haya cambios
+        updateComparison();
+    </script>
+</body>
+</html>

@@ -48,6 +48,8 @@ resourceBtns.forEach((btn) => {
       showAppScreen();
     } else if (btn.dataset.resource === 'space-rockets') {
       window.location.href = 'cohetes-espaciales.html';
+    } else if (btn.dataset.resource === 'triangle-congruence') {
+      window.location.href = 'triangulos-congruentes.html';
     }
   });
 });
